@@ -92,11 +92,13 @@ getAllSimpleMovies()
 function getDetailedMoviesFromUrl(url) {
     console.log(`Working with ${url}`);
     httpRequester.get(url)
-        .then((body) => {
-            console.log(body);
+        .then((html) => {
+            console.log(html.body);
             // const selector = ".col-title span[title] a";
             // const html = result.body;
             // return htmlParser.parseSimpleMovie(selector, html);
+            const parsedMovie = htmlParser.parseDetailedMovie(html.body);
+            return parsedMovie;
         })
         .then(movie => {
             // let dbMovies = movies.map(movie => {

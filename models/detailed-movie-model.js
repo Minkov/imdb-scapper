@@ -4,6 +4,17 @@
 const mongoose = require("mongoose"),
     Schema = mongoose.Schema;
 
+const actorSchema = mongoose.schema({
+    name: String,
+    character: String,
+    imdbId: String,
+    image: String
+});
+
+const genreSchema = mongoose.schema({
+    name: String
+});
+
 let DetailedMovieSchema = new Schema({
     image: {
         type: String,
@@ -21,20 +32,15 @@ let DetailedMovieSchema = new Schema({
         type: String,
         required: true
     },
-    genres: {
-        type: String,
-        required: true
-    },
-    releaseDate: {
-        type: Date
-    }
+    genres: [genreSchema],
+    releaseDate: Date,
+    actors: [actorSchema]
 });
 
 let DetailedMovie;
 DetailedMovieSchema.statics.getSimpleMovieByNameAndUrl =
-    function(name, url) {
-        let imdbId = extractImdbIdFromUrl(url);
-        return new DetailedMovie({ name, imdbId });
+    function (name, url) {
+
     };
 
 mongoose.model("DetailedMovie", DetailedMovieSchema);
