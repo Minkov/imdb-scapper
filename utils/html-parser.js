@@ -36,7 +36,9 @@ module.exports.parseDetailedMovie = function (html) {
         reelaseDate: getDateFromRealeaseDate($('a[title="See more release dates"]').text())
     };
 
-    const genres = $('span.itemprop[itemprop="genre"]').text();
+    const genresFromHtml = $('span.itemprop[itemprop="genre"]').text();
+    movie.genres = splitGenresFromImdbGenresHtml(genresFromHtml);
+
     const cast = $('div#titleCast table.cast_list').html();
 
     return movie;
@@ -51,25 +53,32 @@ function getDateFromRealeaseDate(imdbReleaseDate) {
 }
 
 function splitGenresFromImdbGenresHtml(genresFromHtml) {
-    const genresInputLength = genresFromHtml.length;
-    
-    let currentGenre = '';
-    const genresList = [];
-    const genresChars = genresFromHtml.split();
-    for (let i = 0; i < genresInputLength; i += 1) {
-        const nextChar = genresChars.splice(0, 1);
-        
-        const charIsUpper = nextChar === nextChar.toUpperCase();
-        if (charIsUpper) {
-            if (currentGenre.length > 0) {
-                genresList.push(currentGenre);
-            }
+    const genresList = [],
+        genresChars = genresFromHtml.split('');
 
-            currentGenre = '' + nextChar;
-        } else {
-            currentGenre += nextChar;
+    let isDash = false;
+    let currentGenre = '';
+    const len = genresChars.length;
+    for (let i = 0; i < len; i += 1) {
+        const nextChar = genresChars.splice(0, 1)[0];
+        if (nextChar === '-') {
+            isDash = true;
         }
+
+        if (/[A-Z]/.test(nextChar)) {
+            if (isDash) {
+                isDash = false;
+            } else {
+                if (currentGenre.length > 0) {
+                    genresList.push({ name: currentGenre });
+                    currentGenre = '';
+                }
+            }
+        }
+
+        currentGenre += nextChar;
     }
 
+    genresList.push({ name: currentGenre });
     return genresList;
 }
