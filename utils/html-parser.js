@@ -34,7 +34,7 @@ module.exports.parseDetailedMovie = function (html) {
         title: $('div.title_wrapper h1').text(),
         description: $('div.plot_summary_wrapper div.plot_summary div.summary_text').text()
             .trim(),
-        reelaseDate: getDateFromRealeaseDate($('a[title="See more release dates"]').text())
+        releaseDate: getDateFromRealeaseDate($('a[title="See more release dates"]').text())
     };
 
     const genresFromHtml = $('span.itemprop[itemprop="genre"]').text();
@@ -47,7 +47,7 @@ module.exports.parseDetailedMovie = function (html) {
         }
 
         const row = $(item);
-        
+
         const parsedName = row.find('td[itemprop="actor"] span').text(),
             parsedCharacter = $(row.find('td.character div a')[0]).text(),
             parsedImdbId = getActorIdmbIdFromHref(row.find('td[itemprop="actor"] a').attr('href')),

@@ -7,7 +7,7 @@ const queuesFactory = require("./data-structures/queue");
 const modelsFactory = require("./models");
 const constants = require("./config/constants");
 
-// require("./config/mongoose")(constants.connectionString);
+require("./config/mongoose")(constants.connectionString);
 
 let urlsQueue = queuesFactory.getQueue();
 
@@ -93,18 +93,13 @@ function getDetailedMoviesFromUrl(url) {
     console.log(`Working with ${url}`);
     httpRequester.get(url)
         .then((html) => {
-            // const selector = ".col-title span[title] a";
-            // const html = result.body;
-            // return htmlParser.parseSimpleMovie(selector, html);
             const parsedMovie = htmlParser.parseDetailedMovie(html.body);
             return parsedMovie;
         })
         .then(movie => {
-            // let dbMovies = movies.map(movie => {
-            //     return modelsFactory.getSimpleMovie(movie.title, movie.url);
-            // });
+            const detailedMovie = modelsFactory.getDetailedMovie(movie);
 
-            // // modelsFactory.insertManySimpleMovies(dbMovies);
+            modelsFactory.insertDetailedMovie(detailedMovie);
             return wait(1000);
         })
         .then(() => {
