@@ -1,7 +1,7 @@
 /* globals require module */
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose"),
+const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 const actorSchema = mongoose.schema({
@@ -43,6 +43,6 @@ DetailedMovieSchema.statics.getSimpleMovieByNameAndUrl =
 
     };
 
-mongoose.model("DetailedMovie", DetailedMovieSchema);
-DetailedMovie = mongoose.model("DetailedMovie");
+mongoose.model('DetailedMovie', DetailedMovieSchema);
+DetailedMovie = mongoose.model('DetailedMovie');
 module.exports = DetailedMovie;

@@ -93,7 +93,6 @@ function getDetailedMoviesFromUrl(url) {
     console.log(`Working with ${url}`);
     httpRequester.get(url)
         .then((html) => {
-            console.log(html.body);
             // const selector = ".col-title span[title] a";
             // const html = result.body;
             // return htmlParser.parseSimpleMovie(selector, html);
