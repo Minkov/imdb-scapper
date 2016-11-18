@@ -1,13 +1,13 @@
 /* globals console require setTimeout Promise */
 'use strict';
 
-const httpRequester = require("./utils/http-requester");
-const htmlParser = require("./utils/html-parser");
-const queuesFactory = require("./data-structures/queue");
-const modelsFactory = require("./models");
-const constants = require("./config/constants");
+const httpRequester = require('./utils/http-requester');
+const htmlParser = require('./utils/html-parser');
+const queuesFactory = require('./data-structures/queue');
+const modelsFactory = require('./models');
+const constants = require('./config/constants');
 
-require("./config/mongoose")(constants.connectionString);
+require('./config/mongoose')(constants.connectionString);
 
 let urlsQueue = queuesFactory.getQueue();
 
@@ -19,7 +19,7 @@ function wait(time) {
     });
 }
 
-////////////////////////////
+//
 // constants.genres.forEach(genre => {
 //     for (let i = 0; i < constants.pagesCount; i += 1) {
 //         let url = `http://www.imdb.com/search/title?genres=${genre}&title_type=feature&0sort=moviemeter,asc&page=${i + 1}&view=simple&ref_=adv_nxt`;
@@ -31,7 +31,7 @@ function wait(time) {
 //     console.log(`Working with ${url}`);
 //     httpRequester.get(url)
 //         .then((result) => {
-//             const selector = ".col-title span[title] a";
+//             const selector = '.col-title span[title] a';
 //             const html = result.body;
 //             return htmlParser.parseSimpleMovie(selector, html);
 //         })
@@ -61,7 +61,7 @@ function wait(time) {
 // Array.from({ length: asyncPagesCount })
 //     .forEach(() => getMoviesFromUrl(urlsQueue.pop()));
 
-/////////////////////////////////////////////////////////
+//
 
 const getAllSimpleMovies = require('./data/simple-movie-data');
 
