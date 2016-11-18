@@ -41,13 +41,17 @@ module.exports.parseDetailedMovie = function (html) {
     movie.genres = splitGenresFromImdbGenresHtml(genresFromHtml);
 
     const cast = $('div#titleCast table.cast_list tr').each((index, item) => {
+        if (index === 0) {
+            return;
+        }
+
         const row = $(item);
-        return {
-            name: row.children('td[itemprop="actor"] span').text(),
-            character: row.children('td.character div').text(),
-            imdbId: getActorIdmbIdFromHref(row.children('td[itemprop="actor"] a').attr('href')),
-            image: row.children('td.primary_photo a').attr('href')
-        };
+        console.log(row.html());
+        const name = row.find('td[itemprop="actor"] span').text(),
+            character = row.find('td.character div a').text(),
+            imdbId = getActorIdmbIdFromHref(row.find('td[itemprop="actor"] a').attr('href')),
+            image = row.find('td.primary_photo a').attr('href');
+
     });
     movie.actors = cast;
 
@@ -65,7 +69,7 @@ function getDateFromRealeaseDate(imdbReleaseDate) {
 // /name/nm7368158/?ref_=tt_cl_i1
 function getActorIdmbIdFromHref(href) {
     const words = href.split('/');
-    return words[1];
+    return words[2];
 }
 
 function splitGenresFromImdbGenresHtml(genresFromHtml) {
