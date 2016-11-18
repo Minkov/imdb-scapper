@@ -40,20 +40,30 @@ module.exports.parseDetailedMovie = function (html) {
     const genresFromHtml = $('span.itemprop[itemprop="genre"]').text();
     movie.genres = splitGenresFromImdbGenresHtml(genresFromHtml);
 
-    const cast = $('div#titleCast table.cast_list tr').each((index, item) => {
+    const actors = [];
+    $('div#titleCast table.cast_list tr').each((index, item) => {
         if (index === 0) {
             return;
         }
 
         const row = $(item);
-        console.log(row.html());
-        const name = row.find('td[itemprop="actor"] span').text(),
-            character = row.find('td.character div a').text(),
-            imdbId = getActorIdmbIdFromHref(row.find('td[itemprop="actor"] a').attr('href')),
-            image = row.find('td.primary_photo a').attr('href');
+        
+        const parsedName = row.find('td[itemprop="actor"] span').text(),
+            parsedCharacter = $(row.find('td.character div a')[0]).text(),
+            parsedImdbId = getActorIdmbIdFromHref(row.find('td[itemprop="actor"] a').attr('href')),
+            parsedImage = row.find('td.primary_photo a').attr('href');
 
+        const actor = {
+            name: parsedName,
+            character: parsedCharacter,
+            imdbId: parsedImdbId,
+            image: parsedImage
+        };
+
+        actors.push(actor);
     });
-    movie.actors = cast;
+
+    movie.actors = actors;
 
     return movie;
 };
