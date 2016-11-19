@@ -63,16 +63,12 @@ function wait(time) {
 
 //
 
-let simpleMoviesQueue = queuesFactory.getQueue();
-let allSimpleMovies = [];
 getAllSimpleMovies()
-    .then((res) => {
-        allSimpleMovies = res;
-
+    .then((allSimpleMovies) => {
+        let simpleMoviesQueue = queuesFactory.getQueue();
         allSimpleMovies.forEach(movie => {
             let url = `http://www.imdb.com/title/${movie.imdbId}/?ref_=adv_li_tt`;
             simpleMoviesQueue.push(url);
-
         });
 
         return simpleMoviesQueue;
@@ -81,13 +77,14 @@ getAllSimpleMovies()
         const asyncDetailsPagesCount = 15;
 
         Array.from({ length: asyncDetailsPagesCount })
-            .forEach(() => getDetailedMoviesFromUrl(urlQueue.pop()));
+            .forEach(() => getDetailedMoviesFromUrl(urlQueue));
     })
     .catch((err) => {
         console.log(err.message);
     });
 
-function getDetailedMoviesFromUrl(url) {
+function getDetailedMoviesFromUrl(urlQueue) {
+    const url = urlQueue.pop();
     console.log(`Working with ${url}`);
     httpRequester.get(url)
         .then((html) => {
@@ -96,16 +93,15 @@ function getDetailedMoviesFromUrl(url) {
         })
         .then(movie => {
             const detailedMovie = modelsFactory.getDetailedMovie(movie);
-
             modelsFactory.insertDetailedMovie(detailedMovie);
             return wait(1000);
         })
         .then(() => {
-            if (simpleMoviesQueue.isEmpty()) {
+            if (urlQueue.isEmpty()) {
                 return;
             }
 
-            getDetailedMoviesFromUrl(simpleMoviesQueue.pop());
+            getDetailedMoviesFromUrl(urlQueue);
         })
         .catch((err) => {
             console.dir(err, { colors: true });
