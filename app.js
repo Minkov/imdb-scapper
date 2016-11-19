@@ -7,6 +7,7 @@ const queuesFactory = require('./data-structures/queue');
 const modelsFactory = require('./models');
 const constants = require('./config/constants');
 const getAllSimpleMovies = require('./data/simple-movie-data');
+const urlBuilder = require('./utils/url-builder');
 
 require('./config/mongoose')(constants.connectionString);
 
@@ -67,7 +68,7 @@ getAllSimpleMovies()
     .then((allSimpleMovies) => {
         let simpleMoviesQueue = queuesFactory.getQueue();
         allSimpleMovies.forEach(movie => {
-            let url = `http://www.imdb.com/title/${movie.imdbId}/?ref_=adv_li_tt`;
+            let url = urlBuilder.getDetailedMovedImdbUrl(movie.imdbId);
             simpleMoviesQueue.push(url);
         });
 
